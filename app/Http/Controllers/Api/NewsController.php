@@ -9,8 +9,9 @@ use App\Models\NewsModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+
+// note request mungkin masih salah
 class NewsController extends Controller
 {
     public static function slugify($text, string $divider = '-')
@@ -61,7 +62,6 @@ class NewsController extends Controller
                 'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
             ]);
 
-            $slug = self::slugify($request->title);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -69,11 +69,56 @@ class NewsController extends Controller
                     'errors' => $validator->errors(), // Mengembalikan pesan kesalahan
                 ], 400);
             }
+
+            $slug = self::slugify($request->title);
             NewsModel::create([
                 'id' => $slug,
                 'title' => $request->title,
                 'content' => $request->content,
             ]);
+            return response()->json([
+                'message' => "berhasil menambah news!",
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => 'Internal Server Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function update(Request $request)
+    {
+        $id = $request->route('id');
+
+        try {
+            $validator = Validator::make($request->all(), [
+                'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+                'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'errors' => $validator->errors(), // Mengembalikan pesan kesalahan
+                ], 400);
+            }
+
+            $news = NewsModel::findOrFail($id);
+            if (!$news) {
+                return response()->json([
+                    'message' => "Id News not available!",
+                ], 200);
+            }
+            if ($news->title != $request->title) {
+                $news->id(self::slugify($request->title));
+                $news->title($request->title);
+            }
+            $news->content($request->content);
+            $news->save();
+
+            return response()->json([
+                'message' => "berhasil mengupdate news!",
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
