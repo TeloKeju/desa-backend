@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('news', function (Blueprint $table) {
-            $table->id();
+            $table->string('id')->primary();
+            $table->string('title');
             $table->text('content');
             $table->date('publish_date');
-            $table->string('publisher');
             $table->integer('views');
         });
     }
