@@ -15,10 +15,14 @@ use App\Http\Controllers\Api\NewsController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+// Auth
 Route::post('/login', [AuthController::class, "login"])->name('login');
-// Route::get('/test', [NewsController::class, "get"]);
-Route::get('/test', [NewsController::class, "get"]);
+
+// News
+Route::get('/news', [NewsController::class, "get"]);
+Route::post('/news/add', [NewsController::class, "add"]);
+Route::patch('/news/update', [NewsController::class, "update"]);
+Route::delete('/news/delete', [NewsController::class, "delete"]);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

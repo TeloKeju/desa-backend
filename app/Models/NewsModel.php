@@ -10,10 +10,13 @@ class NewsModel extends Model
     use HasFactory;
 
     protected $table = 'news';
+    protected $keyType = 'string';
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
         'title',
+        'image',
         'content',
         'views'
     ];

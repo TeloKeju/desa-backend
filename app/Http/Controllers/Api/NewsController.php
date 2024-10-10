@@ -9,11 +9,19 @@ use App\Models\NewsModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use App\Services\ImageService;
+use Exception;
 
 // note request mungkin masih salah
 class NewsController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public static function slugify($text, string $divider = '-')
     {
         $text = preg_replace('~[^\pL\d]+~u', $divider, $text);
@@ -30,7 +38,7 @@ class NewsController extends Controller
         return $text;
     }
 
-    public function get(Request $request)
+    public static function get(Request $request)
     {
         try {
             if ($request->id) {
@@ -59,6 +67,7 @@ class NewsController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Pastikan judul diisi dan tidak lebih dari 255 karakter
                 'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
             ]);
 
@@ -71,9 +80,16 @@ class NewsController extends Controller
             }
 
             $slug = self::slugify($request->title);
+            $upload = $this->imageService->uploadImage($request);
+
+            if ($upload['status'] === false) {
+                throw new Exception($upload['message']);
+            }
+
             NewsModel::create([
                 'id' => $slug,
                 'title' => $request->title,
+                'image' => $request->file('image'),
                 'content' => $request->content,
             ]);
             return response()->json([
@@ -86,7 +102,7 @@ class NewsController extends Controller
             ], 500);
         }
     }
-    public function update(Request $request)
+    public static function update(Request $request)
     {
         $id = $request->route('id');
 
@@ -119,6 +135,29 @@ class NewsController extends Controller
             return response()->json([
                 'message' => "berhasil mengupdate news!",
             ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => 'Internal Server Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public static function delete(Request $request)
+    {
+        try {
+            $news = NewsModel::findOrFail($request->id);
+            if (!$news) {
+                return response()->json([
+                    'status' => false,
+                    'error' => 'News not faund!',
+                ], 404);
+            }
+            $news->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'News sucessfully delete!',
+            ], 404);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
