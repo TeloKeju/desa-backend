@@ -67,7 +67,7 @@ class NewsController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Pastikan judul diisi dan tidak lebih dari 255 karakter
                 'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
             ]);
 
@@ -80,7 +80,7 @@ class NewsController extends Controller
             }
 
             $slug = self::slugify($request->title);
-            $upload = $this->imageService->uploadImage($request);
+            $upload = $this->imageService->uploadImage($request->file('image'));
 
             if ($upload['status'] === false) {
                 throw new Exception($upload['message']);
@@ -89,7 +89,7 @@ class NewsController extends Controller
             NewsModel::create([
                 'id' => $slug,
                 'title' => $request->title,
-                'image' => $request->file('image'),
+                'image' => $upload["path"],
                 'content' => $request->content,
             ]);
             return response()->json([
@@ -102,29 +102,44 @@ class NewsController extends Controller
             ], 500);
         }
     }
-    public static function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $id = $request->route('id');
 
+        // $validator = Validator::make($request->all(), ([
+        //     'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+        //     'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+        // ]));
+
+        $request->validate([
+            'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+            'content' => 'required|string|max:1000',
+        ]);
+        return $request->title;
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+                'req' => $request->input(),
+            ], 400);
+        }
         try {
-            $validator = Validator::make($request->all(), [
-                'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
-                'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'errors' => $validator->errors(), // Mengembalikan pesan kesalahan
-                ], 400);
-            }
-
             $news = NewsModel::findOrFail($id);
+
             if (!$news) {
                 return response()->json([
                     'message' => "Id News not available!",
                 ], 200);
             }
+
+            if($request->file("image")){
+                $upload = $this->imageService->uploadImage($request->file("image"));
+                $path = $upload['path'];
+
+                $this->imageService->dropImage($news["image"]);
+
+                $news->image($path);
+            }
+
             if ($news->title != $request->title) {
                 $news->id(self::slugify($request->title));
                 $news->title($request->title);
@@ -143,7 +158,7 @@ class NewsController extends Controller
         }
     }
 
-    public static function delete(Request $request)
+    public function delete(Request $request)
     {
         try {
             $news = NewsModel::findOrFail($request->id);
@@ -153,6 +168,10 @@ class NewsController extends Controller
                     'error' => 'News not faund!',
                 ], 404);
             }
+
+
+            $this->imageService->dropImage($news["image"]);
+
             $news->delete();
             return response()->json([
                 'status' => true,
