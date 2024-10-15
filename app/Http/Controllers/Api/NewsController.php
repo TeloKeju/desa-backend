@@ -104,18 +104,17 @@ class NewsController extends Controller
     }
     public function update(Request $request, $id)
     {
-
-        $request->validate([
-            'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
             'content' => 'required|string|max:1000',
         ]);
-        return $request->title;
+
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors(),
-                'req' => $request->input(),
-            ], 400);
+             ], 400);
         }
         try {
             $news = NewsModel::findOrFail($id);

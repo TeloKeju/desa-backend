@@ -9,7 +9,7 @@ class SOTKModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'SOTK';
+    protected $table = 'sotk';
     public $timestamps = false;
 
     protected $fillable = [

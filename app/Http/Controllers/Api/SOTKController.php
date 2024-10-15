@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\SOTKModel;
+use App\Services\ImageService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Services\ImageService;
+
 
 class SOTKController extends Controller
 {
-
+    //
     protected $imageService;
 
     public function __construct(ImageService $imageService)
@@ -43,12 +45,61 @@ class SOTKController extends Controller
             }
 
             SOTKModel::create([
-                'title' => $request->nama,
+                'nama' => $request->nama,
                 'image' => $upload["path"],
-                'content' => $request->content,
+                'jabatan' => $request->jabatan,
             ]);
+
             return response()->json([
-                'message' => "berhasil menambah news!",
+                'message' => "SOTK Successfully create!",
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => 'Internal Server Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function update(Request $request, $id) {
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:1000',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+        try {
+            $sotk = SOTKModel::findOrFail($id);
+
+            if (!$sotk) {
+                return response()->json([
+                    'message' => "Id SOTK not available!",
+                ], 200);
+            }
+
+
+            if ($request->file("image")) {
+                $upload = $this->imageService->uploadImage($request->file("image"));
+                $path = $upload['path'];
+
+                $this->imageService->dropImage($sotk["image"]);
+
+                $sotk->image = $path;
+            }
+
+
+            $sotk->nama =$request->nama;
+            $sotk->jabatan = $request->jabatan;
+            $sotk->save();
+
+            return response()->json([
+                'message' => "SOTK successfully update!",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -57,8 +108,31 @@ class SOTKController extends Controller
             ], 500);
         }
     }
-    public function update(Request $request) {}
-    public function delete(Request $request) {}
+    public function delete(Request $request) {
+        try {
+            $sotk = SOTKModel::findOrFail($request->id);
+            if (!$sotk) {
+                return response()->json([
+                    'status' => false,
+                    'error' => 'SOTK not faund!',
+                ], 404);
+            }
+
+
+            $this->imageService->dropImage($sotk["image"]);
+
+            $sotk->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'SOTK sucessfully delete!',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => 'Internal Server Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     public function get(Request $request)
     {
         try {
@@ -82,4 +156,5 @@ class SOTKController extends Controller
             ], 500);
         }
     }
+
 }
