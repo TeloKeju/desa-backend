@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -18,8 +19,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('image');
             $table->text('content');
-            $table->date('publish_date');
-            $table->integer('views');
+            $table->date('publish_date')->default(DB::raw('CURRENT_TIMESTAMP'));;
+            $table->integer('views')->default('1');
         });
     }
 

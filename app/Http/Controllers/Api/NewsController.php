@@ -105,11 +105,6 @@ class NewsController extends Controller
     public function update(Request $request, $id)
     {
 
-        // $validator = Validator::make($request->all(), ([
-        //     'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
-        //     'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
-        // ]));
-
         $request->validate([
             'title' => 'required|string|max:255', // Pastikan judul diisi dan tidak lebih dari 255 karakter
             'content' => 'required|string|max:1000',
@@ -131,7 +126,7 @@ class NewsController extends Controller
                 ], 200);
             }
 
-            if($request->file("image")){
+            if ($request->file("image")) {
                 $upload = $this->imageService->uploadImage($request->file("image"));
                 $path = $upload['path'];
 

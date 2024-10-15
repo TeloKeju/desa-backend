@@ -20,9 +20,9 @@ Route::post('/login', [AuthController::class, "login"])->name('login');
 
 // News
 Route::get('/news', [NewsController::class, "get"]);
-Route::post('/news/add', [NewsController::class, "add"]);
-Route::patch('/news/update/{id}', [NewsController::class, "update"]);
-Route::delete('/news/delete', [NewsController::class, "delete"]);
+Route::post('/news', [NewsController::class, "add"]);
+Route::post('/news/update/{id}', [NewsController::class, "update"]);
+Route::delete('/news', [NewsController::class, "delete"]);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
