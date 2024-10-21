@@ -3,18 +3,19 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\File;
+// use SebastianBergmann\Environment\Console;
 
 class ImageService
 {
-    public function uploadImage($request)
+    public function uploadImage($request, $path)
     {
         try {
             $image = $request;
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/news/'), $imageName);
+            $image->move(public_path('images/' . $path . '/'), $imageName);
             return [
                 "status" => true,
-                "path" => "images/news/" . $imageName,
+                "path" => "images/" . $path . "/" . $imageName,
             ];
         } catch (\Exception $e) {
             return [
@@ -24,7 +25,8 @@ class ImageService
         }
     }
 
-    public function dropImage($path) {
+    public function dropImage($path)
+    {
         if (File::exists($path)) {
             File::delete($path);
             return [

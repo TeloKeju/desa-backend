@@ -1,20 +1,17 @@
 <?php
 
-// namespace App\Http\Controllers;
 namespace App\Http\Controllers\Api;
 
-
-
-use App\Models\NewsModel;
 use App\Http\Controllers\Controller;
+use App\Models\WisataModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Services\ImageService;
+use Illuminate\Support\Facades\Validator;
 use Exception;
 
-// note request mungkin masih salah
-class NewsController extends Controller
+class WisataController extends Controller
 {
+    //
     protected $imageService;
 
     public function __construct(ImageService $imageService)
@@ -41,26 +38,26 @@ class NewsController extends Controller
     public static function get(Request $request)
     {
         if ($request->id) {
-            $news = NewsModel::find($request->id);
+            $wisata = WisataModel::find($request->id);
 
-            if (!$news) {
+            if (!$wisata) {
                 return response()->json([
                     'status' => false,
-                    'error' => "News not found!",
+                    'error' => "wisata not found!",
                 ], 404);
             }
             return response()->json([
                 'status' => true,
-                'news' => $news,
+                'wisata' => $wisata,
             ], 200);
         }
 
 
         try {
-            $allNews = NewsModel::all();
+            $allWisata = WisataModel::all();
             return response()->json([
                 'status' => true,
-                'news' => $allNews,
+                'wisata' => $allWisata,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -73,11 +70,14 @@ class NewsController extends Controller
     public function add(Request $request)
     {
         try {
+
             $validator = Validator::make($request->all(), [
-                'title' => 'required|string|max:255|unique:news', // Pastikan judul diisi dan tidak lebih dari 255 karakter
+                'title' => 'required|string|max:255|unique:wisata,title', // Pastikan judul diisi dan tidak lebih dari 255 karakter
                 'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Pastikan judul diisi dan tidak lebih dari 255 karakter
                 'content' => 'required|string|max:1000', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
             ]);
+
+
 
 
             if ($validator->fails()) {
@@ -87,21 +87,25 @@ class NewsController extends Controller
                 ], 400);
             }
 
+
+
+
             $slug = self::slugify($request->title);
-            $upload = $this->imageService->uploadImage($request->file('image'), 'news');
+            $upload = $this->imageService->uploadImage($request->file('image'), 'wisata');
 
             if ($upload['status'] === false) {
                 throw new Exception($upload['message']);
             }
 
-            NewsModel::create([
+
+            WisataModel::create([
                 'id' => $slug,
                 'title' => $request->title,
                 'image' => $upload["path"],
                 'content' => $request->content,
             ]);
             return response()->json([
-                'message' => "berhasil menambah news!",
+                'message' => "berhasil menambah wisata!",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -126,35 +130,33 @@ class NewsController extends Controller
             ], 400);
         }
         try {
-            $news = NewsModel::find($id);
+            $wisata = WisataModel::find($id);
 
-            if (!$news) {
+            if (!$wisata) {
                 return response()->json([
-                    'message' => "Id News not available!",
+                    'message' => "Id wisata not available!",
                 ], 404);
             }
 
 
 
+
             if ($request->file("image")) {
-                $upload = $this->imageService->uploadImage($request->file("image"), 'news');
+                $upload = $this->imageService->uploadImage($request->file("image"), 'wisata');
                 $path = $upload['path'];
-
-                $this->imageService->dropImage($news["image"]);
-
-
-                $news->image = $path;
+                $this->imageService->dropImage($wisata["image"]);
+                $wisata->image = $path;
             }
 
-            if ($news->title != $request->title) {
-                $news->id = self::slugify($request->title);
-                $news->title = $request->title;
+            if ($wisata->title != $request->title) {
+                $wisata->id = self::slugify($request->title);
+                $wisata->title = $request->title;
             }
-            $news->content = $request->content;
-            $news->save();
+            $wisata->content = $request->content;
+            $wisata->save();
 
             return response()->json([
-                'message' => "berhasil mengupdate news!",
+                'message' => "berhasil mengupdate wisata!",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -167,21 +169,21 @@ class NewsController extends Controller
     public function delete(Request $request)
     {
         try {
-            $news = NewsModel::find($request->id);
-            if (!$news) {
+            $wisata = WisataModel::find($request->id);
+            if (!$wisata) {
                 return response()->json([
                     'status' => false,
-                    'error' => 'News not faund!',
+                    'error' => 'wisata not faund!',
                 ], 404);
             }
 
 
-            $this->imageService->dropImage($news["image"]);
+            $this->imageService->dropImage($wisata["image"]);
 
-            $news->delete();
+            $wisata->delete();
             return response()->json([
                 'status' => true,
-                'message' => 'News sucessfully delete!',
+                'message' => 'wisata sucessfully delete!',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([

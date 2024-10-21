@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\SOTKModel;
+use App\Models\UmkmModel;
 use App\Services\ImageService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-
-class SOTKController extends Controller
+class UmkmController extends Controller
 {
     //
     protected $imageService;
@@ -24,34 +23,37 @@ class SOTKController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'nama' => 'required|string|max:255', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
+                'name' => 'required|string|max:255', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
                 'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
-                'jabatan' => 'required|string|max:255' // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+                'description' => 'required|string|max:255', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+                'contact' => 'required|string|max:255',  // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+                'price' => 'required|max:255',  // Pastikan konten diisi dan tidak lebih dari 1000 karakter
             ]);
-
 
 
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
-                    'errors' => $validator->errors(), // Mengembalikan pesan kesalahan
+                    'errors' => $validator->errors(),
                 ], 400);
             }
 
-            $upload = $this->imageService->uploadImage($request->file('image'), 'SOTK');
+            $upload = $this->imageService->uploadImage($request->file('image'), 'UMKM');
 
             if ($upload['status'] === false) {
                 throw new Exception($upload['message']);
             }
 
-            SOTKModel::create([
-                'nama' => $request->nama,
+            UmkmModel::create([
+                'name' => $request->name,
                 'image' => $upload["path"],
-                'jabatan' => $request->jabatan,
+                'description' => $request->description,
+                'contact' => $request->contact,
+                'price' => $request->price,
             ]);
 
             return response()->json([
-                'message' => "SOTK Successfully create!",
+                'message' => "UMKM Successfully create!",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -63,8 +65,11 @@ class SOTKController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'jabatan' => 'required|string|max:1000',
+            'name' => 'required|string|max:255', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
+            'description' => 'required|string|max:255', // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+            'contact' => 'required|string|max:255',  // Pastikan konten diisi dan tidak lebih dari 1000 karakter
+            'price' => 'required|max:255',  // Pastikan konten diisi dan tidak lebih dari 1000 karakter
         ]);
 
 
@@ -75,31 +80,33 @@ class SOTKController extends Controller
             ], 400);
         }
         try {
-            $sotk = SOTKModel::find($id);
+            $umkm = UmkmModel::find($id);
 
-            if (!$sotk) {
+            if (!$umkm) {
                 return response()->json([
-                    'message' => "Id SOTK not available!",
+                    'message' => "Id umkm not available!",
                 ], 404);
             }
 
 
             if ($request->file("image")) {
-                $upload = $this->imageService->uploadImage($request->file("image"), 'SOTK');
+                $upload = $this->imageService->uploadImage($request->file("image"), 'UMKM');
                 $path = $upload['path'];
 
-                $this->imageService->dropImage($sotk["image"]);
+                $this->imageService->dropImage($umkm["image"]);
 
-                $sotk->image = $path;
+                $umkm->image = $path;
             }
 
 
-            $sotk->nama = $request->nama;
-            $sotk->jabatan = $request->jabatan;
-            $sotk->save();
+            $umkm->name = $request->name;
+            $umkm->description = $request->description;
+            $umkm->contact = $request->contact;
+            $umkm->price = $request->price;
+            $umkm->save();
 
             return response()->json([
-                'message' => "SOTK successfully update!",
+                'message' => "umkm successfully update!",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -111,21 +118,21 @@ class SOTKController extends Controller
     public function delete(Request $request)
     {
         try {
-            $sotk = SOTKModel::find($request->id);
-            if (!$sotk) {
+            $umkm = UmkmModel::find($request->id);
+            if (!$umkm) {
                 return response()->json([
                     'status' => false,
-                    'error' => 'SOTK not faund!',
+                    'error' => 'umkm not faund!',
                 ], 404);
             }
 
 
-            $this->imageService->dropImage($sotk["image"]);
+            $this->imageService->dropImage($umkm["image"]);
 
-            $sotk->delete();
+            $umkm->delete();
             return response()->json([
                 'status' => true,
-                'message' => 'SOTK sucessfully delete!',
+                'message' => 'umkm sucessfully delete!',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
@@ -137,25 +144,25 @@ class SOTKController extends Controller
     public function get(Request $request)
     {
         if ($request->id) {
-            $sotk = SOTKModel::find($request->id);
-            if (!$sotk) {
+            $umkm = UmkmModel::find($request->id);
+            if (!$umkm) {
                 return response()->json([
                     'status' => true,
-                    'error' => "SOTK not found!",
+                    'error' => "umkm not found!",
                 ], 404);
             }
 
             return response()->json([
                 'status' => true,
-                'news' => $sotk,
+                'umkm' => $umkm,
             ], 200);
         }
         try {
 
-            $allSOTK = SOTKModel::all();
+            $allUMKM = UmkmModel::all();
             return response()->json([
                 'status' => true,
-                'sotk' => $allSOTK,
+                'umkm' => $allUMKM,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
