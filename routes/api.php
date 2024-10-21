@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\agamaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -7,13 +8,13 @@ use App\Http\Controllers\Api\GaleryController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PekerjaanController;
 use App\Http\Controllers\Api\PendidikanController;
+use App\Http\Controllers\Api\pendudukController;
 use App\Http\Controllers\Api\WisataController;
 use App\Http\Controllers\Api\SOTKController;
 use App\Http\Controllers\Api\UmkmController;
 use App\Http\Controllers\Api\UmurController;
-
-
-
+use App\Models\agamaModel;
+use App\Models\pendudukModel;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,12 @@ Route::post('/penduduk/umur/update/{id}', [UmurController::class, "update"]);
 
 Route::get('/penduduk/pendidikan', [PendidikanController::class, "get"]);
 Route::post('/penduduk/pendidikan/update/{id}', [PendidikanController::class, "update"]);
+
+Route::get('/penduduk', [pendudukController::class, "get"]);
+Route::post('/penduduk/update/{id}', [pendudukController::class, "update"]);
+
+Route::get('/agama', [agamaController::class, "get"]);
+Route::post('/penduduk/update/{id}', [agamaController::class, "update"]);
 
 
 
