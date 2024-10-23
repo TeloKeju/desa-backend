@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\agamaController;
+use App\Http\Controllers\Api\apbController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Api\WisataController;
 use App\Http\Controllers\Api\SOTKController;
 use App\Http\Controllers\Api\UmkmController;
 use App\Http\Controllers\Api\UmurController;
+use App\Http\Controllers\Api\WajibPilihController;
 use App\Models\agamaModel;
 use App\Models\pendudukModel;
 
@@ -70,7 +72,17 @@ Route::get('/penduduk', [pendudukController::class, "get"]);
 Route::post('/penduduk/update/{id}', [pendudukController::class, "update"]);
 
 Route::get('/agama', [agamaController::class, "get"]);
-Route::post('/penduduk/update/{id}', [agamaController::class, "update"]);
+Route::post('/agama/update/{id}', [agamaController::class, "update"]);
+
+Route::get('/wajibpilih', [WajibPilihController::class, "get"]);
+Route::post('/wajibpilih', [WajibPilihController::class, "add"]);
+Route::post('/wajibpilih/update/{id}', [WajibPilihController::class, "update"]);
+Route::delete('/wajibpilih', [WajibPilihController::class, "delete"]);
+
+Route::get('/apb', [apbController::class, "get"]);
+Route::post('/apb', [apbController::class, "add"]);
+Route::post('/apb/update/{id}', [apbController::class, "update"]);
+Route::delete('/apb', [apbController::class, "delete"]);
 
 
 
