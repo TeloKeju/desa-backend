@@ -100,7 +100,7 @@ class PekerjaanController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Pekerjaan sucessfully delete!',
-            ], 404);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,

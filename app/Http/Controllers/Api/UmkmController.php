@@ -133,7 +133,7 @@ class UmkmController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'umkm sucessfully delete!',
-            ], 404);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,

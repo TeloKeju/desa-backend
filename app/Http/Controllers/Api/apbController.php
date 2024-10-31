@@ -138,7 +138,7 @@ class apbController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'apb sucessfully delete!',
-            ], 404);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,

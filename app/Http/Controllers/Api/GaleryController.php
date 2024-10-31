@@ -149,7 +149,7 @@ class GaleryController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'News sucessfully delete!',
-            ], 404);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
