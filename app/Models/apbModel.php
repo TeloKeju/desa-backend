@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class apbModel extends Model
 {
     use HasFactory;
-    protected $table = 'perkawinan';
+    protected $table = 'apb';
+    protected $primaryKey = 'tahun';
     public $timestamps = false;
 
     protected $fillable = [

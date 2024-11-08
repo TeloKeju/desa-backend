@@ -17,7 +17,7 @@ class apbController extends Controller
             if (!$apb) {
                 return response()->json([
                     'status' => true,
-                    'error' => "wajib pilih not found!",
+                    'error' => "wajib pilih not found!1",
                 ], 404);
             }
 
@@ -31,7 +31,7 @@ class apbController extends Controller
             $allapb = apbModel::all();
             return response()->json([
                 'status' => true,
-                'umur' => $allapb,
+                'apb' => $allapb,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -82,7 +82,7 @@ class apbController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'tahun' => 'required|numeric|unique:apb', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
+            'tahun' => 'required|numeric', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
             'pendapatan' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
             'belanja' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
             'penerimaan' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
@@ -97,6 +97,7 @@ class apbController extends Controller
             ], 400);
         }
         try {
+            // return $tahun = [/tahun => $tahun];
             $apb = apbModel::find($id);
 
             if (!$apb) {
