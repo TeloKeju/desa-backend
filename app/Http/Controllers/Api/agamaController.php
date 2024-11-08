@@ -15,7 +15,7 @@ class agamaController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nama_agama' => 'required|string|max:255', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
+            'agama' => 'required|string|max:255', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
             'jumlah' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
         ]);
 
