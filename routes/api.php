@@ -10,13 +10,13 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PekerjaanController;
 use App\Http\Controllers\Api\PendidikanController;
 use App\Http\Controllers\Api\pendudukController;
+use App\Http\Controllers\Api\perkawinanController;
 use App\Http\Controllers\Api\WisataController;
 use App\Http\Controllers\Api\SOTKController;
 use App\Http\Controllers\Api\UmkmController;
 use App\Http\Controllers\Api\UmurController;
 use App\Http\Controllers\Api\WajibPilihController;
-use App\Models\agamaModel;
-use App\Models\pendudukModel;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +84,8 @@ Route::post('/apb', [apbController::class, "add"]);
 Route::post('/apb/update/{id}', [apbController::class, "update"]);
 Route::delete('/apb', [apbController::class, "delete"]);
 
-
+Route::get('/perkawinan', [perkawinanController::class, 'get']);
+Route::post('/perkawinan/update/{id}', [perkawinanController::class, "update"]);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
