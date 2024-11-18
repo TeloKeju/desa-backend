@@ -17,6 +17,14 @@ class apbModel extends Model
         'pendapatan',
         'belanja',
         'penerimaan',
-        'pengeluaran'
+        'pengeluaran',
+        "hasil_desa",
+        "transfer",
+        "lain",
+        "penyelenggaraan_pemerintahan_desa",
+        "pelaksanaan_pembangunan_desa",
+        "pembinaan_kemasyarakatan_desa",
+        "pemberdayaan_masyarakat_desa",
+        'penanggulangan_bencana',
     ];
 }

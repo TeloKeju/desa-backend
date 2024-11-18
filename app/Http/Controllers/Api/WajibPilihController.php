@@ -32,7 +32,7 @@ class WajibPilihController extends Controller
             $allWajibPilih = WajibPilihModel::all();
             return response()->json([
                 'status' => true,
-                'umur' => $allWajibPilih,
+                'wajib_pilih' => $allWajibPilih,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -77,7 +77,7 @@ class WajibPilihController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required|numeric|unique:wajib_pilih', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
+            'id' => 'required|numeric', // Nama harus diisi, string, dan tidak lebih dari 255 karakter
             'wajib_pilih' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
         ]);
 
@@ -119,14 +119,14 @@ class WajibPilihController extends Controller
             if (!$wajibPilih) {
                 return response()->json([
                     'status' => false,
-                    'error' => 'umkm not faund!',
+                    'error' => 'wajib_pilih not faund!',
                 ], 404);
             }
 
             $wajibPilih->delete();
             return response()->json([
                 'status' => true,
-                'message' => 'umkm sucessfully delete!',
+                'message' => 'wajib_pilih sucessfully delete!',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

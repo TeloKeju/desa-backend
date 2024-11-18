@@ -50,6 +50,14 @@ class apbController extends Controller
                 'belanja' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
                 'penerimaan' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
                 'pengeluaran' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
+                "hasil_desa" => 'required|numeric',
+                "transfer" => 'required|numeric',
+                "lain" => 'required|numeric',
+                "penyelenggaraan_pemerintahan_desa" => 'required|numeric',
+                "pelaksanaan_pembangunan_desa" => 'required|numeric',
+                "pembinaan_kemasyarakatan_desa" => 'required|numeric',
+                "pemberdayaan_masyarakat_desa" => 'required|numeric',
+                'penanggulangan_bencana' => 'required|numeric',
             ]);
 
 
@@ -66,6 +74,14 @@ class apbController extends Controller
                 'belanja' => $request->belanja,
                 'penerimaan' => $request->penerimaan,
                 'pengeluaran' => $request->pengeluaran,
+                "hasil_desa" => $request->hasil_desa,
+                "transfer" => $request->transfer,
+                "lain" => $request->lain,
+                "penyelenggaraan_pemerintahan_desa" => $request->penyelenggaraan_pemerintahan_desa,
+                "pelaksanaan_pembangunan_desa" => $request->pelaksanaan_pembangunan_desa,
+                "pembinaan_kemasyarakatan_desa" => $request->pembinaan_kemasyarakatan_desa,
+                "pemberdayaan_masyarakat_desa" => $request->pemberdayaan_masyarakat_desa,
+                'penanggulangan_bencana' => $request->penanggulangan_bencana,
             ]);
 
             return response()->json([
@@ -87,6 +103,14 @@ class apbController extends Controller
             'belanja' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
             'penerimaan' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
             'pengeluaran' => 'required|numeric', // Gambar harus berupa file image dengan tipe jpeg, png, atau jpg, dan ukuran maksimal 2MB
+            "hasil_desa" => 'required|numeric',
+            "transfer" => 'required|numeric',
+            "lain" => 'required|numeric',
+            "penyelenggaraan_pemerintahan_desa" => 'required|numeric',
+            "pelaksanaan_pembangunan_desa" => 'required|numeric',
+            "pembinaan_kemasyarakatan_desa" => 'required|numeric',
+            "pemberdayaan_masyarakat_desa" => 'required|numeric',
+            'penanggulangan_bencana' => 'required|numeric',
         ]);
 
 
@@ -111,6 +135,13 @@ class apbController extends Controller
             $apb->belanja = $request->belanja;
             $apb->penerimaan = $request->penerimaan;
             $apb->pengeluaran = $request->pengeluaran;
+            $apb->transfer = $request->transfer;
+            $apb->lain = $request->lain;
+            $apb->penyelenggaraan_pemerintahan_desa = $request->penyelenggaraan_pemerintahan_desa;
+            $apb->pelaksanaan_pembangunan_desa = $request->pelaksanaan_pembangunan_desa;
+            $apb->pembinaan_kemasyarakatan_desa = $request->pembinaan_kemasyarakatan_desa;
+            $apb->pemberdayaan_masyarakat_desa = $request->pemberdayaan_masyarakat_desa;
+            $apb->penanggulangan_bencana = $request->penanggulangan_bencana;
             $apb->save();
 
             return response()->json([
