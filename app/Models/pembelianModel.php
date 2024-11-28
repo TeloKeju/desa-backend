@@ -5,20 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NewsModel extends Model
+class pembelianModel extends Model
 {
     use HasFactory;
-
-    protected $table = 'news';
-    protected $keyType = 'string';
+    protected $table = 'pembelian';
     public $timestamps = false;
-
     protected $fillable = [
-        'id',
-        'title',
-        'image',
-        'content',
-        'views',
-        'publish_date'
+        'umkm_id',
     ];
 }

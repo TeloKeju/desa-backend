@@ -99,6 +99,7 @@ class NewsController extends Controller
                 'title' => $request->title,
                 'image' => $upload["path"],
                 'content' => $request->content,
+                'publish_date' => $request->publish_date
             ]);
             return response()->json([
                 'message' => "berhasil menambah news!",
@@ -151,6 +152,7 @@ class NewsController extends Controller
                 $news->title = $request->title;
             }
             $news->content = $request->content;
+            $news->publish_date = $request->publish_date;
             $news->save();
 
             return response()->json([

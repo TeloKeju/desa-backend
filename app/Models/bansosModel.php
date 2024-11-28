@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NewsModel extends Model
+class bansosModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'news';
-    protected $keyType = 'string';
+    protected $table = 'bansos';
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
-        'title',
-        'image',
-        'content',
-        'views',
-        'publish_date'
+        "vaksin1",
+        "vaksin2",
+        "bnpt",
+        "blt",
+        "pkh",
+        "bst",
+        "bantuanCaleg",
+        "baznas",
     ];
 }

@@ -5,18 +5,24 @@ use App\Http\Controllers\Api\apbController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\bansosController;
+use App\Http\Controllers\Api\commentController;
 use App\Http\Controllers\Api\GaleryController;
+use App\Http\Controllers\Api\idmController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\PekerjaanController;
+use App\Http\Controllers\Api\pembelianController;
 use App\Http\Controllers\Api\PendidikanController;
 use App\Http\Controllers\Api\pendudukController;
 use App\Http\Controllers\Api\perkawinanController;
+use App\Http\Controllers\Api\sdgsController;
 use App\Http\Controllers\Api\WisataController;
 use App\Http\Controllers\Api\SOTKController;
+use App\Http\Controllers\Api\stuntingController;
 use App\Http\Controllers\Api\UmkmController;
 use App\Http\Controllers\Api\UmurController;
 use App\Http\Controllers\Api\WajibPilihController;
-
+use App\Models\commentModel;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +92,31 @@ Route::delete('/apb', [apbController::class, "delete"]);
 
 Route::get('/perkawinan', [perkawinanController::class, 'get']);
 Route::post('/perkawinan/update/{id}', [perkawinanController::class, "update"]);
+
+Route::get('/sdgs', [sdgsController::class, 'get']);
+Route::post('/sdgs/update/{id}', [sdgsController::class, "update"]);
+
+Route::get('/bansos', [bansosController::class, 'get']);
+Route::post('/bansos/update/{id}', [bansosController::class, "update"]);
+
+Route::get('/stunting', [stuntingController::class, "get"]);
+Route::post('/stunting', [stuntingController::class, "add"]);
+Route::post('/stunting/update/{id}', [stuntingController::class, "update"]);
+Route::delete('/stunting', [stuntingController::class, "delete"]);
+
+Route::get('/idm', [idmController::class, "get"]);
+Route::post('/idm', [idmController::class, "add"]);
+Route::post('/idm/update/{id}', [idmController::class, "update"]);
+Route::delete('/idm', [idmController::class, "delete"]);
+
+Route::get('/comment', [commentController::class, "get"]);
+Route::delete('/comment', [commentController::class, "delete"]);
+Route::post('/comment', [commentController::class, "add"]);
+Route::post('/comment/update/{id}', [commentController::class, "update"]);
+
+Route::get('/pembelian', [pembelianController::class, "get"]);
+Route::delete('/pembelian', [pembelianController::class, "delete"]);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
